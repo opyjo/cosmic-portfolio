@@ -1,77 +1,101 @@
-"use client"
+"use client";
 
-import { motion, useInView } from "framer-motion"
-import { useRef, useState } from "react"
-import { ExternalLink, Github, Code, Layers, Zap, Cpu } from "lucide-react"
-import type { JSX } from "react"
+import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import {
+  ExternalLink,
+  Github,
+  Code,
+  Layers,
+  Zap,
+  Cpu,
+  BookOpen,
+  Users,
+  Brain,
+} from "lucide-react";
+import type { JSX } from "react";
 
 interface Project {
-  title: string
-  description: string
-  technologies: string[]
-  image: string
-  githubUrl?: string
-  liveUrl?: string
-  featured: boolean
-  icon: JSX.Element
-  color: string
+  title: string;
+  description: string;
+  technologies: string[];
+  image: string;
+  githubUrl?: string;
+  liveUrl?: string;
+  featured: boolean;
+  icon: JSX.Element;
+  color: string;
 }
 
 export default function SideProjectsSection() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" })
-  const [activeFilter, setActiveFilter] = useState<"all" | "featured">("all")
-  const [hoveredProject, setHoveredProject] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const [activeFilter, setActiveFilter] = useState<"all" | "featured">("all");
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
 
-  // Side projects data
+  // Real side projects data
   const projects: Project[] = [
     {
-      title: "Cosmic Portfolio",
-      description: "An interactive, space-themed portfolio website with constellation animations and particle effects.",
-      technologies: ["Next.js", "Framer Motion", "D3.js", "Tailwind CSS"],
-      image: "/space-themed-website.png",
-      githubUrl: "https://github.com/opyjo/portfolio",
-      liveUrl: "https://johnsonojo.com",
+      title: "FocusFlow",
+      description:
+        "A productivity and focus management app to help users stay on track and achieve deep work.",
+      technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+      image: "/focusflow.png",
+      liveUrl: "https://focus-flow-zeta.vercel.app/",
       featured: true,
-      icon: <Zap className="w-5 h-5" />,
+      icon: <Zap className="w-5 h-5" />, // Lightning for focus
       color: "from-purple-500 to-indigo-600",
     },
     {
-      title: "Weather Dashboard",
-      description: "A real-time weather application with interactive maps and detailed forecasts.",
-      technologies: ["React", "OpenWeather API", "Leaflet", "Chart.js"],
-      image: "/weather-dashboard.png",
-      githubUrl: "https://github.com/opyjo/weather-app",
-      liveUrl: "https://weather.johnsonojo.com",
+      title: "Meeting Document/Visualizer (MeetMetrixs)",
+      description:
+        "A tool for creating, visualizing, and exporting meeting notes and insights.",
+      technologies: ["Next.js", "TypeScript", "Tailwind CSS", "D3.js"],
+      image: "/meetmetrixs.png",
+      liveUrl: "https://www.meetmetrixs.com/",
       featured: true,
-      icon: <Layers className="w-5 h-5" />,
+      icon: <Layers className="w-5 h-5" />, // Layers for documents/visualization
       color: "from-blue-500 to-cyan-600",
     },
     {
-      title: "Task Manager",
-      description: "A productivity application for managing tasks, projects, and deadlines.",
-      technologies: ["React", "Redux", "Firebase", "Material UI"],
-      image: "/task-management-app-interface.png",
-      githubUrl: "https://github.com/opyjo/task-manager",
-      featured: false,
-      icon: <Code className="w-5 h-5" />,
+      title: "Kids Learn Coding",
+      description:
+        "An open-source platform to help kids learn programming through interactive lessons and games.",
+      technologies: ["React", "TypeScript", "Firebase", "Tailwind CSS"],
+      image: "/kids-learn-coding.png",
+      githubUrl: "https://github.com/opyjo/KidsLearnCoding",
+      featured: true,
+      icon: <BookOpen className="w-5 h-5" />, // Book for learning
       color: "from-green-500 to-emerald-600",
     },
     {
-      title: "E-Commerce Store",
-      description: "A full-featured online store with product catalog, cart, and checkout functionality.",
-      technologies: ["Next.js", "Stripe", "MongoDB", "Tailwind CSS"],
-      image: "/ecommerce-website-homepage.png",
-      githubUrl: "https://github.com/opyjo/ecommerce",
-      liveUrl: "https://store.johnsonojo.com",
+      title: "Scrum-Poker",
+      description:
+        "A collaborative estimation tool for agile teams to play planning poker online.",
+      technologies: ["React", "TypeScript", "Socket.io", "Tailwind CSS"],
+      image: "/scrum-poker.png",
+      githubUrl: "https://github.com/opyjo/scrum-poker",
       featured: true,
-      icon: <Cpu className="w-5 h-5" />,
-      color: "from-red-500 to-pink-600",
+      icon: <Users className="w-5 h-5" />, // Users for team collaboration
+      color: "from-pink-500 to-fuchsia-600",
     },
-  ]
+    {
+      title: "Programming Quiz App",
+      description:
+        "A quiz application to test and improve your programming knowledge.",
+      technologies: ["React", "TypeScript", "Redux", "Tailwind CSS"],
+      image: "/programming-quiz.png",
+      githubUrl: "https://github.com/opyjo/programming-quiz-app",
+      featured: false,
+      icon: <Brain className="w-5 h-5" />, // Brain for quiz/knowledge
+      color: "from-yellow-500 to-orange-600",
+    },
+  ];
 
   // Filter projects based on active filter
-  const filteredProjects = projects.filter((project) => activeFilter === "all" || project.featured)
+  const filteredProjects = projects.filter(
+    (project) => activeFilter === "all" || project.featured
+  );
 
   return (
     <div ref={containerRef} className="space-y-6">
@@ -90,7 +114,10 @@ export default function SideProjectsSection() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="text-white/80 mb-6"
       >
-        <p>A collection of personal projects I've built to explore new technologies and ideas.</p>
+        <p>
+          A collection of personal projects I've built to explore new
+          technologies and ideas.
+        </p>
       </motion.div>
 
       {/* Filter buttons */}
@@ -146,19 +173,26 @@ export default function SideProjectsSection() {
             </div>
 
             {/* Project icon */}
-            <div className={`absolute top-4 right-4 p-2 rounded-full bg-gradient-to-br ${project.color} shadow-lg`}>
+            <div
+              className={`absolute top-4 right-4 p-2 rounded-full bg-gradient-to-br ${project.color} shadow-lg`}
+            >
               {project.icon}
             </div>
 
             {/* Project content */}
             <div className="p-5">
               <h3 className="text-xl font-medium mb-2">{project.title}</h3>
-              <p className="text-white/70 text-sm mb-4">{project.description}</p>
+              <p className="text-white/70 text-sm mb-4">
+                {project.description}
+              </p>
 
               {/* Technologies */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {project.technologies.map((tech) => (
-                  <span key={tech} className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">
+                  <span
+                    key={tech}
+                    className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80"
+                  >
                     {tech}
                   </span>
                 ))}
@@ -204,7 +238,11 @@ export default function SideProjectsSection() {
 
       {/* Empty state if no projects match filter */}
       {filteredProjects.length === 0 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-10">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-10"
+        >
           <p className="text-white/60">No projects match the current filter.</p>
         </motion.div>
       )}
@@ -219,5 +257,5 @@ export default function SideProjectsSection() {
         <p className="text-white/60 text-sm">More projects coming soon...</p>
       </motion.div>
     </div>
-  )
+  );
 }
