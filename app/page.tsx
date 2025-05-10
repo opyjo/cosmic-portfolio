@@ -1,27 +1,30 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import ConstellationBackground from "@/components/constellation-background"
-import AboutSection from "@/components/about-section"
-import WorkSection from "@/components/work-section"
-import SkillsSection from "@/components/skills-section"
-import ContactSection from "@/components/contact-section"
-import SideProjectsSection from "@/components/side-projects-section"
-import ParticleEffect from "@/components/particle-effect"
-import HeroSection from "@/components/hero-section"
-import BlogTransition from "@/components/blog-transition"
-import CometCursor from "@/components/comet-cursor"
-import SocialSection from "@/components/social-section"
+import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import ConstellationBackground from "@/components/constellation-background";
+import AboutSection from "@/components/about-section";
+import WorkSection from "@/components/work-section";
+import SkillsSection from "@/components/skills-section";
+import ContactSection from "@/components/contact-section";
+import SideProjectsSection from "@/components/side-projects-section";
+import ParticleEffect from "@/components/particle-effect";
+import HeroSection from "@/components/hero-section";
+import BlogTransition from "@/components/blog-transition";
+import CometCursor from "@/components/comet-cursor";
+import SocialSection from "@/components/social-section";
+import AIAssistant from "@/components/AIAssistant";
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState<string | null>(null)
-  const [hoveredConstellation, setHoveredConstellation] = useState<string | null>(null)
-  const [introComplete, setIntroComplete] = useState(false)
-  const [showConstellations, setShowConstellations] = useState(false)
-  const [showBlogTransition, setShowBlogTransition] = useState(false)
-  const mainRef = useRef<HTMLDivElement>(null)
-  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [hoveredConstellation, setHoveredConstellation] = useState<
+    string | null
+  >(null);
+  const [introComplete, setIntroComplete] = useState(false);
+  const [showConstellations, setShowConstellations] = useState(false);
+  const [showBlogTransition, setShowBlogTransition] = useState(false);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Update the sections array to replace resume with side-projects
   const sections = [
@@ -32,72 +35,75 @@ export default function Home() {
     { id: "social", name: "Social", position: { x: 50, y: 70 } },
     { id: "side-projects", name: "Side-Projects", position: { x: 20, y: 50 } },
     { id: "contact", name: "Contact", position: { x: 80, y: 70 } },
-  ]
+  ];
 
   // Update the handleConstellationClick function to handle the blog link with transition
   const handleConstellationClick = (sectionId: string) => {
     if (sectionId === "blog") {
-      setShowBlogTransition(true)
+      setShowBlogTransition(true);
     } else {
-      setActiveSection(activeSection === sectionId ? null : sectionId)
+      setActiveSection(activeSection === sectionId ? null : sectionId);
     }
-  }
+  };
 
   // Handle blog transition completion
   const handleBlogTransitionComplete = () => {
-    window.open("https://opyjo2.hashnode.dev/", "_blank")
-    setShowBlogTransition(false)
-  }
+    window.open("https://opyjo2.hashnode.dev/", "_blank");
+    setShowBlogTransition(false);
+  };
 
   // Throttled hover handler
   const handleConstellationHover = (sectionId: string | null) => {
     if (hoveredConstellation !== sectionId) {
-      setHoveredConstellation(sectionId)
+      setHoveredConstellation(sectionId);
     }
-  }
+  };
 
   // Close active section when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (mainRef.current && !mainRef.current.contains(e.target as Node)) {
-        setActiveSection(null)
+        setActiveSection(null);
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Set initial load to false after animation completes
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsInitialLoad(false)
-    }, 3000)
+      setIsInitialLoad(false);
+    }, 3000);
 
-    return () => clearTimeout(timer)
-  }, [])
+    return () => clearTimeout(timer);
+  }, []);
 
   // Handle intro animation sequence
   useEffect(() => {
-    if (isInitialLoad) return
+    if (isInitialLoad) return;
 
     // After initial load, start intro sequence
     const introTimer = setTimeout(() => {
-      setIntroComplete(true)
+      setIntroComplete(true);
 
       // After intro completes, show constellations
       const constellationsTimer = setTimeout(() => {
-        setShowConstellations(true)
-      }, 1000)
+        setShowConstellations(true);
+      }, 1000);
 
-      return () => clearTimeout(constellationsTimer)
-    }, 3500)
+      return () => clearTimeout(constellationsTimer);
+    }, 3500);
 
-    return () => clearTimeout(introTimer)
-  }, [isInitialLoad])
+    return () => clearTimeout(introTimer);
+  }, [isInitialLoad]);
 
   return (
-    <main ref={mainRef} className="relative h-screen w-full overflow-hidden bg-black text-white">
+    <main
+      ref={mainRef}
+      className="relative h-screen w-full overflow-hidden bg-black text-white"
+    >
       <ConstellationBackground
         activeConstellation={hoveredConstellation || activeSection}
         constellations={sections}
@@ -107,10 +113,17 @@ export default function Home() {
       <CometCursor />
 
       {/* Blog Transition Animation */}
-      <BlogTransition isActive={showBlogTransition} onAnimationComplete={handleBlogTransitionComplete} />
+      <BlogTransition
+        isActive={showBlogTransition}
+        onAnimationComplete={handleBlogTransitionComplete}
+      />
 
       {/* Hero Section */}
-      <HeroSection introComplete={introComplete} setIntroComplete={setIntroComplete} activeSection={activeSection} />
+      <HeroSection
+        introComplete={introComplete}
+        setIntroComplete={setIntroComplete}
+        activeSection={activeSection}
+      />
 
       {/* Navigation Constellations */}
       <AnimatePresence>
@@ -145,7 +158,10 @@ export default function Home() {
                 <div className="relative">
                   <div
                     className={`w-3 h-3 rounded-full bg-white ${
-                      hoveredConstellation === section.id || activeSection === section.id ? "opacity-100" : "opacity-50"
+                      hoveredConstellation === section.id ||
+                      activeSection === section.id
+                        ? "opacity-100"
+                        : "opacity-50"
                     }`}
                   ></div>
                   <motion.div
@@ -164,7 +180,13 @@ export default function Home() {
                   <motion.p
                     className="absolute mt-4 left-1/2 -translate-x-1/2 text-xs md:text-sm font-light tracking-wider whitespace-nowrap"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredConstellation === section.id || activeSection === section.id ? 1 : 0.6 }}
+                    animate={{
+                      opacity:
+                        hoveredConstellation === section.id ||
+                        activeSection === section.id
+                          ? 1
+                          : 0.6,
+                    }}
                   >
                     {section.name}
                   </motion.p>
@@ -224,6 +246,7 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+      <AIAssistant />
     </main>
-  )
+  );
 }
