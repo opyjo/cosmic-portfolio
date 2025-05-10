@@ -178,7 +178,7 @@ export default function Home() {
                     }}
                   ></motion.div>
                   <motion.p
-                    className="absolute mt-4 left-1/2 -translate-x-1/2 text-xs md:text-sm font-light tracking-wider whitespace-nowrap"
+                    className="absolute mt-4 left-1/2 -translate-x-1/2 text-xs md:text-sm font-light tracking-wider whitespace-nowrap uppercase"
                     initial={{ opacity: 0 }}
                     animate={{
                       opacity:

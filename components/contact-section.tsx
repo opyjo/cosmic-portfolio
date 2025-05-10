@@ -1,60 +1,71 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect, useRef } from "react"
-import { motion, useInView } from "framer-motion"
-import { Send, Mail, Github, Linkedin, Twitter } from "lucide-react"
-import * as d3 from "d3"
+import type React from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Send, Mail, Github, Linkedin, Twitter } from "lucide-react";
+import * as d3 from "d3";
+import emailjs from "emailjs-com";
 
 export default function ContactSection() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
     message: "",
-  })
+  });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" })
-  const svgRef = useRef<SVGSVGElement>(null)
-  const [waveRendered, setWaveRendered] = useState(false)
-  const animationRef = useRef<number>()
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [waveRendered, setWaveRendered] = useState(false);
+  const animationRef = useRef<number>();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsSubmitted(true)
-      setFormState({ name: "", email: "", message: "" })
-
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setIsSubmitted(false)
-      }, 5000)
-    }, 1500)
-  }
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string,
+        {
+          from_name: formState.name,
+          from_email: formState.email,
+          message: formState.message,
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string
+      );
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      setFormState({ name: "", email: "", message: "" });
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } catch (error) {
+      setIsSubmitting(false);
+      alert("Failed to send message. Please try again.");
+    }
+  };
 
   useEffect(() => {
-    if (!svgRef.current || !isInView || waveRendered) return
+    if (!svgRef.current || !isInView || waveRendered) return;
 
     const renderWave = () => {
-      const svg = d3.select(svgRef.current)
-      const width = svgRef.current.clientWidth
-      const height = 100
+      const svg = d3.select(svgRef.current);
+      const width = svgRef.current.clientWidth;
+      const height = 100;
 
       // Clear previous elements
-      svg.selectAll("*").remove()
+      svg.selectAll("*").remove();
 
       // Create gradient
       const gradient = svg
@@ -65,24 +76,33 @@ export default function ContactSection() {
         .attr("x1", 0)
         .attr("y1", height / 2)
         .attr("x2", width)
-        .attr("y2", height / 2)
+        .attr("y2", height / 2);
 
-      gradient.append("stop").attr("offset", "0%").attr("stop-color", "#4f83cc")
-      gradient.append("stop").attr("offset", "50%").attr("stop-color", "#7c43bd")
-      gradient.append("stop").attr("offset", "100%").attr("stop-color", "#3a9fbf")
+      gradient
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#4f83cc");
+      gradient
+        .append("stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#7c43bd");
+      gradient
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#3a9fbf");
 
       // Create a wave animation with fewer points for better performance
-      const pointCount = 25 // Reduced from 50
+      const pointCount = 25; // Reduced from 50
       const waveData = Array.from({ length: pointCount }, (_, i) => ({
         x: i * (width / pointCount),
         y: height / 2,
-      }))
+      }));
 
       const line = d3
         .line<{ x: number; y: number }>()
         .x((d) => d.x)
         .y((d) => d.y)
-        .curve(d3.curveBasis)
+        .curve(d3.curveBasis);
 
       const path = svg
         .append("path")
@@ -90,44 +110,44 @@ export default function ContactSection() {
         .attr("fill", "none")
         .attr("stroke", "url(#contactGradient)")
         .attr("stroke-width", 2)
-        .attr("d", line)
+        .attr("d", line);
 
       // Animate the wave more efficiently
-      let phase = 0
-      let lastFrameTime = 0
+      let phase = 0;
+      let lastFrameTime = 0;
 
       const animateWave = (timestamp: number) => {
         // Throttle to ~30fps for better performance
         if (timestamp - lastFrameTime < 33) {
-          animationRef.current = requestAnimationFrame(animateWave)
-          return
+          animationRef.current = requestAnimationFrame(animateWave);
+          return;
         }
 
-        lastFrameTime = timestamp
-        phase += 0.1
+        lastFrameTime = timestamp;
+        phase += 0.1;
 
         waveData.forEach((d, i) => {
-          d.y = height / 2 + Math.sin(phase + i * 0.2) * 15
-        })
+          d.y = height / 2 + Math.sin(phase + i * 0.2) * 15;
+        });
 
-        path.attr("d", line)
+        path.attr("d", line);
 
-        animationRef.current = requestAnimationFrame(animateWave)
-      }
+        animationRef.current = requestAnimationFrame(animateWave);
+      };
 
-      animationRef.current = requestAnimationFrame(animateWave)
-      setWaveRendered(true)
-    }
+      animationRef.current = requestAnimationFrame(animateWave);
+      setWaveRendered(true);
+    };
 
     // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(renderWave)
+    requestAnimationFrame(renderWave);
 
     return () => {
       if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
+        cancelAnimationFrame(animationRef.current);
       }
-    }
-  }, [isInView, waveRendered])
+    };
+  }, [isInView, waveRendered]);
 
   return (
     <div ref={containerRef} className="space-y-6">
@@ -148,13 +168,17 @@ export default function ContactSection() {
           className="space-y-4"
         >
           <p className="text-white/80">
-            Interested in working together? Feel free to reach out through the form or connect with me directly.
+            Interested in working together? Feel free to reach out through the
+            form or connect with me directly.
           </p>
 
           <div className="space-y-3 pt-4">
             <div className="flex items-center space-x-3">
               <Mail className="w-5 h-5 text-white/50" />
-              <a href="mailto:johnsonoojo@gmail.com" className="hover:text-white/90 transition-colors">
+              <a
+                href="mailto:johnsonoojo@gmail.com"
+                className="hover:text-white/90 transition-colors"
+              >
                 johnsonoojo@gmail.com
               </a>
             </div>
@@ -229,13 +253,18 @@ export default function ContactSection() {
                   <Send className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-light">Message Sent!</h3>
-                <p className="text-white/70">Thank you for reaching out. I'll get back to you soon.</p>
+                <p className="text-white/70">
+                  Thank you for reaching out. I'll get back to you soon.
+                </p>
               </div>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm text-white/70 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm text-white/70 mb-1"
+                >
                   Name
                 </label>
                 <input
@@ -250,7 +279,10 @@ export default function ContactSection() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm text-white/70 mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm text-white/70 mb-1"
+                >
                   Email
                 </label>
                 <input
@@ -265,7 +297,10 @@ export default function ContactSection() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm text-white/70 mb-1">
+                <label
+                  htmlFor="message"
+                  className="block text-sm text-white/70 mb-1"
+                >
                   Message
                 </label>
                 <textarea
@@ -301,5 +336,5 @@ export default function ContactSection() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

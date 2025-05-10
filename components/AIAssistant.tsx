@@ -175,7 +175,7 @@ const AIAssistant: React.FC = () => {
               </Button>
               <Button
                 onClick={clearChat}
-                variant="ghost"
+                variant="outline"
                 className="text-xs px-2 py-1 h-7"
               >
                 Clear
