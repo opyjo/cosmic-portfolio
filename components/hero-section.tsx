@@ -43,10 +43,16 @@ export default function HeroSection({ introComplete, setIntroComplete, activeSec
               transition={{ duration: 1 }}
             >
               <motion.h1
-                className="text-4xl md:text-6xl font-light tracking-wider mb-6 text-center"
+                className="text-5xl md:text-7xl font-heading font-bold tracking-wider mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
+                animate={{
+                  opacity: 1,
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  opacity: { duration: 1, delay: 0.3 },
+                  y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+                }}
               >
                 JOHNSON OJO
               </motion.h1>
@@ -57,20 +63,21 @@ export default function HeroSection({ introComplete, setIntroComplete, activeSec
                 animate={{ opacity: 0.8 }}
                 transition={{ duration: 1, delay: 1 }}
               >
-                <p className="text-lg md:text-xl mb-2">Frontend Engineer</p>
-                <p className="text-base md:text-lg">
+                <p className="text-xl md:text-2xl mb-2 font-light text-primary-foreground">Frontend Engineer</p>
+                <p className="text-base md:text-lg text-muted-foreground">
                   Building high-performance, scalable web applications with modern technologies
                 </p>
               </motion.div>
 
               <motion.button
-                className="mt-12 px-6 py-2 border border-white/30 rounded-full text-sm backdrop-blur-sm hover:bg-white/10 transition-colors pointer-events-auto"
+                className="mt-12 px-8 py-3 rounded-full text-sm font-medium tracking-wide text-white bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(var(--primary),0.5)] transition-all duration-300 pointer-events-auto group relative overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 2 }}
                 onClick={() => setIntroComplete(true)}
               >
-                Explore My Universe
+                <span className="relative z-10">Explore My Universe</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.button>
             </motion.div>
           )}

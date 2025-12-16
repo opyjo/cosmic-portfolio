@@ -157,22 +157,22 @@ export default function Home() {
               >
                 <div className="relative">
                   <div
-                    className={`w-3 h-3 rounded-full bg-white ${
-                      hoveredConstellation === section.id ||
-                      activeSection === section.id
-                        ? "opacity-100"
-                        : "opacity-50"
-                    }`}
+                    className={`w-3 h-3 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] ${hoveredConstellation === section.id ||
+                        activeSection === section.id
+                        ? "opacity-100 scale-125 shadow-[0_0_20px_rgba(255,255,255,1)]"
+                        : "opacity-60"
+                      } transition-all duration-300`}
                   ></div>
                   <motion.div
-                    className="absolute -inset-2 rounded-full border border-white/20"
+                    className="absolute -inset-4 rounded-full border border-primary/30"
                     initial={{ scale: 1, opacity: 0.2 }}
                     animate={{
                       scale: [1, 1.5, 1],
                       opacity: [0.2, 0.5, 0.2],
+                      borderColor: hoveredConstellation === section.id ? "rgba(var(--primary), 0.6)" : "rgba(var(--primary), 0.3)"
                     }}
                     transition={{
-                      duration: 3,
+                      duration: hoveredConstellation === section.id ? 1.5 : 3,
                       repeat: Number.POSITIVE_INFINITY,
                       repeatType: "loop",
                     }}
@@ -183,7 +183,7 @@ export default function Home() {
                     animate={{
                       opacity:
                         hoveredConstellation === section.id ||
-                        activeSection === section.id
+                          activeSection === section.id
                           ? 1
                           : 0.6,
                     }}
@@ -213,7 +213,7 @@ export default function Home() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="bg-black/60 backdrop-blur-md rounded-lg p-6 md:p-10 max-w-4xl w-[90%] max-h-[80vh] overflow-y-auto"
+              className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 md:p-10 max-w-5xl w-[90%] max-h-[85vh] overflow-y-auto border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
             >
               <button
                 onClick={() => setActiveSection(null)}
